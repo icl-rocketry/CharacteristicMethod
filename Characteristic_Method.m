@@ -49,12 +49,9 @@ for i=1:n
         end
     end
 end
+
 x
 y
-for i = 1:n
-plot(x(i,i:n),y(i,i:n))
-hold on
-end
 theta_av = 0.5*(Theta(1:(n),n) + Theta(2:(n+1),n))
 a_w = tan(theta_av)
 a_c = dydx_p(1:n,n)
@@ -66,7 +63,14 @@ for i=2:(n+1)
     X_w(i,1) = (Y_w(i-1,1)-Y_c(i-1,1)-a_w(i-1,1)*X_w(i-1,1)+a_c(i-1,1)*X_c(i-1,1))/(a_c(i-1,1)-a_w(i-1,1));
     Y_w(i,1) = Y_w(i-1,1) + a_w(i-1,1)*(X_w(i,1)-X_w(i-1,1));
 end 
-plot(X_w,Y_w)
 X_w
 X_c
+X_w=X_w(1:(n),1)
+Y_w=Y_w(1:(n),1)
+plot(X_w,Y_w)
+hold on
+for i = 3:n
+plot([x(i,i:n),X_w(i)],[y(i,i:n),Y_w(i)])
+hold on
+end
 hold off

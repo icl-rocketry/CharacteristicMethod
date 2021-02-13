@@ -28,7 +28,8 @@ Kp = theta - nu; %constant for left running wave (bottom left to top right)
 
 Theta = 0.5*bsxfun(@plus,Kn,-Kn'); %theta obtained back from Kn at every intersection point
 Nu = 0.5*bsxfun(@minus,Kn,-Kn'); %nu obtained back from Kn at every intersection point
-%bsxfun essentially intermeshes the arrays into matrices
+%bsxfun essentially intermeshes the arrays into matrices using the fact
+%that reflected waves Kp = -Kn of the initial waves and transposing with -Kn' creates interface between ALL waves
 
 Theta = [theta;Theta]; %matrix of theta (flow angles) at each point
 Nu = [nu;Nu]; %matrix of nu (PM function angles) at each point

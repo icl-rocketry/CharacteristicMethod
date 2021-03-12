@@ -10,7 +10,7 @@ pressurechange = 0; %conditions for first iteration
 %READ:
 %THIS CODE IS AN IMPLEMENTATION OF THE INVERSE MARCHING METHOD DESCRIBED BY
 %ZUCROW AND MODELLED ON THE SHEFFIELD 2020 PAPER WHICH ASSUMES A CENTRELINE
-%PRESSURE DISTRIBUTION. 
+%PRESSURE DISTRIBUTION.
 
 %THE INVERSE MARCHING METHOD STARTS FROM THE CENTRE LINE AND WORKS BOTTOM
 %TO TOP HENCE USING POINTS I,J-1 AND I+1,J TO FIND I,J. THIS METHOD REQUIRES A BUNCH OF ITERATION WHICH IS CAUSING SOME
@@ -28,12 +28,12 @@ pressurechange = 0; %conditions for first iteration
 
 Lnet = 0.1; %initial guess of centreline "net" length
 q = -3; %cubic pressure distribution parameter- must be negative
-n = 39; %number of characteristic lines to plot
+n = 60; %number of characteristic lines to plot
 maxerror = 0.01;
 
 rt = 0.0088; %throat radius
 
-g = 1.135; %ratio of specific heats (gamma)
+g = 1.1484; %ratio of specific heats (gamma)
 R = 329;  %gas constant
 T0 = 3170; %stagnation temperature
 P0 = 30e5; %stagnation pressure
@@ -72,7 +72,7 @@ while approve == 'y' %iterations
     close all %close all figures
     
     if pressurechange ~= 0
-        Lnet = Lnet-Lnet*pressurechange/25; %just shift it into the right direction...
+        Lnet = Lnet-Lnet*pressurechange/20; %just shift it into the right direction...
     end
     
     for i=1:n %due to lack of boundary conditions for initial expansion a cubic pressure distribution is assumed along the centreline
@@ -161,13 +161,15 @@ while approve == 'y' %iterations
                         if j == n %if at the end then...
                             N(i,j) = 2/(tan(mu(i,j-1))+tan(mu(i,j)))*(2*V(i,j-1)/(V(i,j-1)+V(i,j))+(Pn(i,j)+Pn(i,j))/2*(x(i,j)-x(i,j-1))); %as before
                             C(i,j) = 2/(tan(mu(i+1,j))+tan(mu(i,j)))*(2*V(i+1,j)/(V(i+1,j)+V(i,j))+(Qn(i,j)+Qn(i,j))/2*(x(i,j)-x(i+1,j)));
+                            V(i,j) = (N(i,j)+C(i,j)-theta(i,j-1)+theta(i+1,j))/(4*((V(i,j-1)+V(i,j))^-1*(tan(mu(i,j-1))+tan(mu(i,j)))^-1+(V(i+1,j)+V(i,j))^-1*(tan(mu(i+1,j))+tan(mu(i,j)))^-1));
                             theta(i,j) = theta(i,j-1)+2/(tan(mu(i,j-1))+tan(mu(i,j)))*(2*(V(i,j)-V(i,j-1))/(V(i,j)+V(i,j-1))-(Pn(i,j)+Pn(i,j))/2*(x(i,j)-x(i,j-1)));
+                            
                         else %everywhere else, a j+1 point exists
                             N(i,j) = 2/(tan(mu(i,j-1))+tan(mu(i,j)))*(2*V(i,j-1)/(V(i,j-1)+V(i,j))+(Pn(i,j)+Pn(i,j+1))/2*(x(i,j)-x(i,j-1)));
                             C(i,j) = 2/(tan(mu(i+1,j))+tan(mu(i,j)))*(2*V(i+1,j)/(V(i+1,j)+V(i,j))+(Qn(i,j)+Qn(i,j+1))/2*(x(i,j)-x(i+1,j)));
+                            V(i,j) = (N(i,j)+C(i,j)-theta(i,j-1)+theta(i+1,j))/(4*((V(i,j-1)+V(i,j))^-1*(tan(mu(i,j-1))+tan(mu(i,j)))^-1+(V(i+1,j)+V(i,j))^-1*(tan(mu(i+1,j))+tan(mu(i,j)))^-1));
                             theta(i,j) = theta(i,j-1)+2/(tan(mu(i,j-1))+tan(mu(i,j)))*(2*(V(i,j)-V(i,j-1))/(V(i,j)+V(i,j-1))-(Pn(i,j)+Pn(i,j+1))/2*(x(i,j)-x(i,j-1)));
                         end
-                        V(i,j) = (N(i,j)+C(i,j)-theta(i,j-1)+theta(i+1,j))/(4*((V(i,j-1)+V(i,j))^-1*(tan(mu(i,j-1))+tan(mu(i,j)))^-1+(V(i+1,j)+V(i,j))^-1*(tan(mu(i+1,j))+tan(mu(i,j)))^-1));
                     else %not iterating, first order slope
                         x(i,j) = (r(i,j-1)-r(i+1,j)+x(i+1,j)*tan(theta(i+1,j)-mu(i+1,j))-x(i,j-1)*tan(theta(i,j-1)+mu(i,j-1)))/(tan(theta(i+1,j)-mu(i+1,j))-tan(theta(i,j-1)+mu(i,j-1)));
                         r(i,j) = r(i,j-1)+(x(i,j)-x(i,j-1))*tan(theta(i,j-1)+mu(i,j-1));

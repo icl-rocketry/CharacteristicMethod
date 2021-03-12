@@ -6,8 +6,11 @@ close all %close all figures and other popups
 
 %% Definitions and initialisation
 
-M = 2.6; %Exit Mach number (obtained from engine pressure ratio and ambient pressure, assuming perfet expansion)
-y = 1.1336; %ratio of specific heats (gamma)
+Pc = 28e5;
+Pe = 1e5;
+y = 1.1484; %ratio of specific heats (gamma)
+M = sqrt(((Pc/Pe)^((y-1)/y)-1)*2/(y-1)); %Exit Mach number (obtained from engine pressure ratio and ambient pressure, assuming perfet expansion)
+
 
 AR = ((y+1)/2)^((-(y+1))/(2*(y-1)))*((1+(y-1)/2*M^2)^((y+1)/(2*(y-1))))/M;
 n = 39; %number of characteristic lines to plot

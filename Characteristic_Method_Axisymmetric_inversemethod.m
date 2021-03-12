@@ -28,7 +28,7 @@ pressurechange = 0; %conditions for first iteration
 
 Lnet = 0.1; %initial guess of centreline "net" length
 q = -3; %cubic pressure distribution parameter- must be negative
-n = 60; %number of characteristic lines to plot
+n = 100; %number of characteristic lines to plot
 maxerror = 0.01;
 
 rt = 0.0088; %throat radius
@@ -288,4 +288,14 @@ title(leg,'index of reflected line')
 figure()
 plot(1:n,errorximag)
 title('imaginary components (if not 0 then the current sim is screwed)')
+
+%% Generate csv
+wr = input('Write to csv? y/n','s');
+if wr == y
+    Maindir = pwd; %main directory
+    cd Nozzlecoordinates %open folder
+    writematrix([X_w,Y_w],['Noz_Axi_',date,'_',num2str(g),'_',num2str(P0),'_',num2str(n),'.csv'])
+    writematrix([X_w*100,Y_w*100,zeros(length(Y_w),1)],['FusionCSV_Noz_Axi_',date,'_',num2str(g),'_',num2str(P0),'_',num2str(n),'.csv'])
+    cd(Maindir); %close folder
+end
 
